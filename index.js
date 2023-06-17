@@ -436,7 +436,6 @@ app.get("/health", async (req, res) => {
 
   return res.status(200).json({
     status: "success",
-    dbState: mongoose.STATES[mongoose.connection.readyState]
   });
 })
 
