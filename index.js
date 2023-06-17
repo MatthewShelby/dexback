@@ -2,7 +2,7 @@ const express = require("express");
 const Moralis = require("moralis").default;
 const { EvmChain } = require("@moralisweb3/common-evm-utils");
 const mongoose = require("mongoose");
-const fetch = require("node-fetch"); // Import the fetch library for making HTTP requests
+const fetch = require("node-fetch-native"); // Import the fetch library for making HTTP requests
 
 var bodyParser = require('body-parser')
 
@@ -462,7 +462,7 @@ Moralis.start({
   var dburi = process.env.dburi
   mongoose.connect(dburi, {});
   const port = process.env.port;
-
+  //const fet = import { * } from "node-fetch";
   app.listen(port, () => {
     console.log(`Listening for API Calls`);
   });
