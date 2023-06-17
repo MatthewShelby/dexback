@@ -2,6 +2,8 @@ const express = require("express");
 const Moralis = require("moralis").default;
 const { EvmChain } = require("@moralisweb3/common-evm-utils");
 const mongoose = require("mongoose");
+const fetch = require('node-fetch'); // Import the fetch library for making HTTP requests
+
 var bodyParser = require('body-parser')
 
 const Rec = require("./TX")
@@ -247,7 +249,6 @@ function checkAllowance(ta, wa) {
     .then(res => res.json())
     .then(res => res.allowance);
 }
-const fetch = require('node-fetch'); // Import the fetch library for making HTTP requests
 
 app.get("/fetch", async (req, res) => {
   return fetch('https://api.1inch.io/v5.0/' + req.Q)
