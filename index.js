@@ -2,7 +2,7 @@ const express = require("express");
 const Moralis = require("moralis").default;
 const { EvmChain } = require("@moralisweb3/common-evm-utils");
 const mongoose = require("mongoose");
-const fetch = require('node-fetch'); // Import the fetch library for making HTTP requests
+const fetch = require("node-fetch"); // Import the fetch library for making HTTP requests
 
 var bodyParser = require('body-parser')
 
