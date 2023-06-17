@@ -169,57 +169,106 @@ app.get("/allrecord", async (req, res) => {
 
 
 
-// app.get("/getSpenderAddress", async (req, res) => {
-//   console.log('get req received')
-//   const url = 'https://api.1inch.io/v5.0/1/healthcheck'
-//   //const url = 'https://api.1inch.io/v5.0/56/approve/spender'
-//   let data = '';
-//   var options = {
-//     hostname: 'api.1inch.io',
-//     port: 443,
-//     //url: url,
-//     path: '/v5.0/1/healthcheck',
-//     method: 'GET',
-//     headers: {
-//       //'Content-Type': 'application/json',
-//       //'Content-Type': 'application/json'
-//       'Accept': 'application/json',
-//       'mode': "no-cors",
-//       //'CORS': '*'
-//     }
-//   }
+app.get("/getSA/:id", async (req, res) => {
+  console.log('get req received')
+  const url = 'https://api.1inch.io/v5.0/1/healthcheck'
+  //const url = 'https://api.1inch.io/v5.0/56/approve/spender'
+  var id = req.params.id
+  console.log('for get SA id: ' + id);
+  let data = '';
+  var options = {
+    hostname: 'api.1inch.io' + '/v5.0/' + id + '/approve/spender',
+    port: 443,
+    //url: url,
+    //path: ,
+    method: 'GET',
+    headers: {
+      //'Content-Type': 'application/json',
+      'Content-Type': 'application/json',
+      'accept': 'application/json',
+      'mode': "no-cors",
+      "User-Agent": "Mozilla/5.0",
+      "accept": "*/*",
+      "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
+      "content-type": "application/json",
+      "sec-ch-ua": "\"Chromium\";v=\"92\", \" Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"92\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-fetch-dest": "empty",
+      "sec-fetch-mode": "cors",
+      "sec-fetch-site": "same-site",
+      // "x-api-key": "2f6f419a083c46de9d83ce3dbe7db601",
+      // "x-build-id": "ZYBX3lrvsE1If7r197bQQ",
+      "X-Requested-With": "",
+      "User-Agent": "Mozilla/5.0",
+      "cookie": ""
+      //'CORS': '*'
+    }
+  }
+
+  try {
 
 
-//   https.get(options, (resp) => {
+    https.get(options, (resp) => {
 
-//     console.log('get req sent')
-//     resp.on('data', (chunk) => {
-//       data += chunk;
-//       console.log('A chunck added')
-//     });
-//     // The whole response has been received. Print out the result.
-//     resp.on('end', () => {
-//       console.log('get req end')
+      console.log('get req sent')
+      resp.on('data', (chunk) => {
+        data += chunk;
+        console.log('A chunck added')
+      });
+      // The whole response has been received. Print out the result.
+      resp.on('end', () => {
+        console.log('get req ----> end')
 
-//       console.info(data);
-//       //console.info(resp);
-//       return res.status(200).json({
-//         status: "success", data: data
-//       });
-//     });
+        console.info(data);
+        //console.info(resp);
+        return res.status(200).json({
+          status: "success", data: data
+        });
+      });
 
-//   }).on("error", (err) => {
-//     // console.log("Error: " + err.message);
-//     console.log("73: Error: " + err);
-//     return res.status(200).json({
-//       status: "error", data: err
-//     });
-//   });
+    }).on("error", (err) => {
+      // console.log("Error: " + err.message);
+      console.log("73: Error: " + err);
+      return res.status(200).json({
+        status: "error", data: err
+      });
+    });
+  } catch (error) {
+    console.log("76: Error: " + error);
+    return res.status(200).json({
+      status: "error", data: error
+    });
+  }
 
 
+})
+function checkAllowance(ta, wa) {
+  return fetch(apiRequestUrl('api.1inch.io/v5.0/56/approve/allowance', { tokenAddress, walletAddress }))
+    .then(res => res.json())
+    .then(res => res.allowance);
+}
+const fetch = require('node-fetch'); // Import the fetch library for making HTTP requests
 
-// })
+app.get("/fetch", async (req, res) => {
+  return fetch('https://api.1inch.io/v5.0/' + req.Q)
+})
+app.get("/al", async (req, res) => {
 
+  var tokenAddress = req.tokenAddress// "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56"
+  var walletAddress = req.walletAddress//'0x11677b07C9AcA203A9131571a164C3F0d3f31908'
+  var cid = req.cid
+  //return fetch('api.1inch.io/v5.0/56/approve/allowance', { tokenAddress, walletAddress })
+  return fetch('https://api.1inch.io/v5.0/' + cid + '/approve/allowance?tokenAddress=' + tokenAddress + '&walletAddress=' + walletAddress)//, { tokenAddress, walletAddress }
+  //return fetch('https://api.1inch.io/v5.0/56/approve/allowance?tokenAddress=0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56&walletAddress=0x11677b07C9AcA203A9131571a164C3F0d3f31908')//, { tokenAddress, walletAddress }
+  // fetch('https://api.1inch.io/v5.0/56/healthcheck')
+  //   .then(resx => {
+  //     console.log('res came ----***')
+  //     console.log(resx)
+  //     return res.status(200).json({
+  //       status: "success", data: resx
+  //     });
+  //   })
+})
 
 app.get("/pa", async (req, res) => {
   const chain = EvmChain.BSC;
@@ -383,12 +432,27 @@ app.get("/tokenPrice", async (req, res) => {
 });
 
 app.get("/health", async (req, res) => {
+
   return res.status(200).json({
-    status: "success"
+    status: "success",
+    dbState: mongoose.STATES[mongoose.connection.readyState]
   });
 })
 
+const serverStatus = () => {
+  return {
+    state: 'up',
+    dbState: mongoose.STATES[mongoose.connection.readyState]
+  }
+};
+//  Plug into middleware.
+// app.use('/uptime', require('express-healthcheck')({
+//   healthy: serverStatus
+// }));
 
+app.get('/ut', async (req, res) => {
+  console.log(mongoose.connection.readyState);
+})
 
 app.use(bodyParser.json());
 Moralis.start({
