@@ -431,6 +431,11 @@ app.get("/tokenPrice", async (req, res) => {
 
 
 });
+app.get("/", async (req, res) => {
+  return res.status(200).json({
+    status: "success",
+  });
+})
 
 app.get("/health", async (req, res) => {
 
